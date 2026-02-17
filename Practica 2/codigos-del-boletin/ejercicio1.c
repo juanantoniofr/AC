@@ -19,7 +19,6 @@ int main() {
         int id = omp_get_thread_num();
 		int total_threads = omp_get_num_threads();
         printf("Hola desde el hilo %d de %d\n", id, total_threads);
-        }
     }
     
     return 0;

@@ -13,7 +13,7 @@ int main() {
     // NOTA: Usamos 'atomic' solo para evitar conflictos al escribir en 'suma',
     // céntrate en lo que pasa con la variable 'valor'.
     
-    #pragma omp parallel private(valor)
+    #pragma omp parallel firstprivate(valor)
     {
         // ¿Cuánto vale 'valor' aquí dentro?
         #pragma omp atomic

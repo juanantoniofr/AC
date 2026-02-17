@@ -13,7 +13,7 @@ int main() {
     // TAREA: Paraleliza este bucle.
     // El printf actúa como "freno", dando tiempo a que 
     // los hilos se pisen el valor de 'temp' unos a otros.
-    
+    #pragma omp parallel for private(temp)
     for (int i = 0; i < N; i++) {
         temp = i;
         printf("Hilo %d trabajando en iteracion %d\n", omp_get_thread_num(), i);
