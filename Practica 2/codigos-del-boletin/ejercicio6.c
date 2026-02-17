@@ -12,15 +12,21 @@ int main() {
     // Estamos escribiendo todos en 'contador' a la vez.
     // ¿Qué crees que pasará?
 
-    #pragma omp parallel for
+    double start = omp_get_wtime();
+    #pragma omp parallel for reduction(+:contador)
     for (int i = 0; i < N; i++) {
         if (i % 2 == 0) {
+           
             contador++; // ZONA DE CONFLICTO
         }
     }
 
     printf("Numeros pares encontrados: %d\n", contador);
     printf("Deberian ser: %d\n", N / 2);
+
+    //tiempo
+    double end = omp_get_wtime();
+    printf("Tiempo de ejecución: %f segundos\n", end - start);
 
     if (contador != N / 2) printf("ERROR! Se han perdido actualizaciones.\n");
     return 0;

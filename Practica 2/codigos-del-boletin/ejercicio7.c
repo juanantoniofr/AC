@@ -24,21 +24,25 @@ int main() {
     }
 
     end = omp_get_wtime();
-    printf("Suma Atomic: %lld | Tiempo: %f seg\n", suma, end - start);
+    double atomic_duration = end - start;
+    printf("Suma Atomic: %lld | Tiempo: %f seg\n", suma, atomic_duration);
 
     // --- MODO 2: REDUCTION (Estrategia) ---
     suma = 0; // Reiniciamos
     start = omp_get_wtime();
 
     // TAREA: Completa la directiva con la cláusula reduction
-    // #pragma omp parallel for ...
+    #pragma omp parallel for reduction(+:suma)
     for (int i = 0; i < N; i++) {
         suma += A[i];
     }
 
     end = omp_get_wtime();
-    printf("Suma Reduction: %lld | Tiempo: %f seg\n", suma, end - start);
+    double reduction_duration = end - start;
+    printf("Suma Reduction: %lld | Tiempo: %f seg\n", suma, reduction_duration);
 
+    // mejora del rendimiento
+    printf("Mejora de rendimiento: %f veces más rápido\n", atomic_duration / reduction_duration);
     free(A);
     return 0;
 }

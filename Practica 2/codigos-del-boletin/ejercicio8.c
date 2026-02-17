@@ -23,7 +23,7 @@ int main() {
 
     // TAREA: Busca el valor máximo en paralelo.
 
-    // #pragma omp parallel for ...
+    #pragma omp parallel for reduction(max:maximo)
     for (int i = 0; i < 10; i++) {
         if (vector[i] > maximo) {
 			printf("Hilo %d encontro un nuevo maximo: %d\n", omp_get_thread_num(), vector[i]);
