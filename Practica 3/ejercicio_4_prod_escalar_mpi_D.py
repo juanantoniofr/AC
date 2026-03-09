@@ -23,20 +23,19 @@ start_time = MPI.Wtime()
 n_local = n // p # división entera del número de elementos entre el número de procesos
 inicio_vector_local = mi_rango * n_local
 suma_local = prod_escalar_serie (x, y, inicio_vector_local, n_local)
-print (f"MI RANGO = {mi_rango} , SUMA LOCAL = {suma_local}")
+print (f"MI RANGO = {mi_rango}, SUMA LOCAL = {suma_local}")
 
+# Enviamos el resultado local al proceso 0 para la suma global
+lista = comm.gather(suma_local, root=0)
 
+# Suma las contribuciones calculadas por cada proceso
+suma_total = 0.0
+# Recorro la lista de resultados locales y los sumo
 if mi_rango == 0:
-    # Suma las contribuciones calculadas por cada proceso
-    suma_total = suma_local
-    for fuente in range(1,p):
-        suma_local = comm.recv (source=fuente)
+    for suma_local in lista:
         suma_total += suma_local
     # Muestra el resultado por pantalla
     print (f"PRODUCTO ESCALAR USANDO p={p} TROZOS DE LOS VECTORES X e Y = {suma_total}")
-
-else:
-    comm.send (suma_local, dest=0)
 
 #comm.barrier() # sincroniza a los procesos después de la suma global
 end_time = MPI.Wtime()
