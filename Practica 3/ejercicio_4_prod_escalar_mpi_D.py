@@ -17,8 +17,8 @@ comm = MPI.COMM_WORLD
 mi_rango = comm.Get_rank()
 p = comm.Get_size()
 
-comm.barrier() # sincroniza a los procesos antes de la suma global
-start_time = MPI.Wtime()
+#comm.barrier() # sincroniza a los procesos antes de la suma global
+#start_time = MPI.Wtime()
 # Cada proceso calcula una parte del producto escalar
 n_local = n // p # división entera del número de elementos entre el número de procesos
 inicio_vector_local = mi_rango * n_local
@@ -40,8 +40,8 @@ if mi_rango == 0:
 #comm.barrier() # sincroniza a los procesos después de la suma global
 end_time = MPI.Wtime()
 #if mi_rango == 0:
-print (f"{mi_rango}: TIEMPO DE EJECUCIÓN {end_time - start_time}")
-print("---------------------------------------------")
+#print (f"{mi_rango}: TIEMPO DE EJECUCIÓN {end_time - start_time}")
+#print("---------------------------------------------")
 
 # ¿por qué el tiempo de ejecución no disminuye al aumentar el número de procesos? Porque el tiempo de comunicación entre los procesos es mayor que el tiempo de cálculo local, especialmente para vectores pequeños. Además, la suma global en el proceso 0 también puede ser un cuello de botella.
 # ¿dónde sincronizamos a los procesos? Antes de la suma global, para asegurarnos de que todos los procesos han terminado su cálculo local antes de que el proceso 0 comience a recibir las contribuciones.

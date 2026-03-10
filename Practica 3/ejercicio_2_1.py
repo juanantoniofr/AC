@@ -13,10 +13,15 @@ N = 10_000_000
 if rank == 0:
     # Generamos los datos fuera del cronómetro (simulando carga de disco/input) 
     vector = np.random.rand(N)
+    vector_size = vector.size
+    cuadrados = np.square(vector)  
     bloques = np.array_split(vector, size)
+    bloques_cuadrados = np.array_split(cuadrados, size)
+    
 else:
     vector = None
     bloques = None # Inicializamos variable para el bloque secuencial
+    bloques_cuadrados = None
 
 # Sincronizamos todos los procesos antes de empezar a medir
 comm.Barrier()
@@ -29,6 +34,7 @@ t_inicio_par = MPI.Wtime()
 
 # 1. Distribuir
 bloque_local = comm.scatter(bloques, root=0)
+bloques_cuadrados_local = comm.scatter(bloques_cuadrados, root=0)
 
 
 # ---------- Apartado B ----------
@@ -36,6 +42,8 @@ bloque_local = comm.scatter(bloques, root=0)
 suma_local = np.sum(bloque_local)
 max_local = np.max(bloque_local)
 min_local = np.min(bloque_local)
+suma_local_cuadrados = np.sum(bloques_cuadrados_local)
+
 
 
 # ---------- Apartado C ----------
@@ -43,6 +51,12 @@ min_local = np.min(bloque_local)
 suma_total = comm.reduce(suma_local, op=MPI.SUM, root=0)
 max_total = comm.reduce(max_local, op=MPI.MAX, root=0)
 min_total = comm.reduce(min_local, op=MPI.MIN, root=0)
+suma_total_cuadrados = comm.reduce(suma_local_cuadrados, op=MPI.SUM, root=0)
+
+# -------- Disviación típica -----
+if rank == 0:
+    media_aritmetica_cuadrado = (suma_local / vector_size )**2
+    std = ((suma_local_cuadrados / vector.size) - media_aritmetica_cuadrado)**0.5
 
 # ---------- Apartado D ----------
 # 4. Cálculo Final en Root
@@ -63,6 +77,7 @@ if rank == 0:
     print(f"Resultados (N={N}):")
     print(f"Media: {media:.4f}")
     print(f"Máx:   {max_total:.4f} | Mín: {min_total:.4f}")
+    print(f"Std: {std:.4f}")
     print("-" * 30)
 
     # ==========================================

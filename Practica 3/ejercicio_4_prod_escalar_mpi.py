@@ -38,7 +38,7 @@ if mi_rango == 0:
 else:
     comm.send (suma_local, dest=0)
 
-#comm.barrier() # sincroniza a los procesos después de la suma global
+comm.barrier() # sincroniza a los procesos después de la suma global
 end_time = MPI.Wtime()
 #if mi_rango == 0:
 print (f"{mi_rango}: TIEMPO DE EJECUCIÓN {end_time - start_time}")
