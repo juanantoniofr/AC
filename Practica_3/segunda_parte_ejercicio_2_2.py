@@ -118,6 +118,7 @@ def main():
     if rank == 0:
         C_norm = (C_final - min_total) / (max_total - min_total)
         print(f"C_norm: {C_norm.shape}")
+        print(F"Máximo y mínimo de C_norm: {np.max(C_norm)} - {np.min(C_norm)}")
     # -------------------------------------------------------------------------
     # PARTE 5: Recolección (Modificado)
     # -------------------------------------------------------------------------
@@ -144,7 +145,7 @@ def main():
             C_check = matriz_mul_secuencial(A, B)
            
             # 2. Normalizar el resultado secuencial. Descomentar cuando se haya resuelto problema.
-            # min_check = np.min(C_check)
+            #min_check = np.min(C_check)
             # max_check = np.max(C_check)
             # C_check = (C_check - min_check) / (max_check - min_check)
 
