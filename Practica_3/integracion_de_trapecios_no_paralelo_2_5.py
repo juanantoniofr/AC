@@ -5,11 +5,11 @@
 # USANDO EL METODO DE LOS TRAPECIOS CON n TRAPECIOS
 
 from mpi4py import MPI
-
+from math import log
 
 def f(x):
-    return (1-x*x)**0.5
-
+    return log(x)
+    
 def calcula_integral_parcial(a,b,i_inicial,i_final,n):
     integral_parcial = 0
     for i in range(i_inicial,i_final):
@@ -17,9 +17,9 @@ def calcula_integral_parcial(a,b,i_inicial,i_final,n):
     
     return integral_parcial
 
-a = -1.0
-b = 1.0
-n = 100000
+a = 1.0
+b = 100000.0
+n = 2*2*2*2*3*3*5*7*11*11*13
 h = (b-a)/n
 
 inicial = (f(a) + f(b))/2.0
@@ -32,27 +32,29 @@ if n % size != 0:
     print(f"Error: n {n} debe ser divisible por el número de procesos {size}")
 
 
-# inicializamos los datos
-# Si soy el proceso p, cuáles son los valores inicial y final de la suma que me corresponde
+# Computo paralelo
 numiter = (n -1) // size
-
-
-# computo paralelo
 i_inicial = 1 + rank * numiter
 i_final =  (rank + 1) * numiter
 
+comm.barrier()
+if rank == 0:
+    start_time = MPI.Wtime()
+
 integral_parcial = calcula_integral_parcial(a,b,i_inicial,i_final,n)
+
+# Usar gather para recolectar todos los integral_parcial en el proceso 0
+#todas_integrales = comm.gather(integral_parcial, root=0)
+
+# Usar reduce paa recolectar datos
+integral = comm.reduce(integral_parcial,MPI.SUM,0)
 
 # proceso cero como maestro
 if rank == 0:
-    integral = inicial + integral_parcial
-    for fuente in range(1,size):
-        integral += comm.recv(source=fuente)
+    #integral = inicial + sum(todas_integrales)
     integral *= h
-
+    end_time = MPI.Wtime()
     print (f"ESTIMACION USANDO n={n} TRAPECIOS")
     print (f"DE LA INTEGRAL DESDE {a} HASTA {b} = {integral}")
-    print (f"ESTIMACION DE PI: {2*integral}")
-else:
-    comm.send(integral_parcial,dest=0)
-
+    
+    print (f"tiempo de ejecución:  {end_time - start_time}")
