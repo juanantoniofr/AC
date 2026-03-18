@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["rand", "Wtime"]
+  "cSpell.words": [
+    "bloqueante",
+    "cpus",
+    "hwthread",
+    "rand",
+    "subprocesos",
+    "Wtime"
+  ]
 }
