@@ -1,3 +1,7 @@
+# ejercicio_1_1.md
+
+## Apartado a
+
 Al tratarse de una caché **totalmente asociativa** de 8 líneas y bloques de 4 palabras (16 bytes), la descomposición de la dirección de 32 bits es la siguiente:
 
 - **Desplazamiento:** 4 bits (para indexar los 16 bytes del bloque - 4 palabras). En hexadecimal, esto corresponde exactamente al **último dígito**.
@@ -6,7 +10,9 @@ Al tratarse de una caché **totalmente asociativa** de 8 líneas y bloques de 4 
 
 Patrón de acceso a memoria: al tener los bucles intercambiados y acceder por columnas (`A[i][j]`), estamos saltando de fila en fila. Como cada fila tiene 32 enteros de 4 bytes, el salto en memoria entre cada acceso es de 128 bytes (**`0x80`** en hexadecimal).
 
-Aquí tienes la tabla correcta para los primeros 9 accesos (`j=0`, e `i` desde `0` hasta `8`) bajo esta arquitectura:
+## Apartado b
+
+Tabla para los primeros 9 accesos (`j=0`, e `i` desde `0` hasta `8`) bajo esta arquitectura:
 
 | Dirección (hex) | Etiqueta (hex) | Desplazamiento (hex) | Fallo/Acierto         |
 | :-------------- | :------------- | :------------------- | :-------------------- |
@@ -20,7 +26,7 @@ Aquí tienes la tabla correcta para los primeros 9 accesos (`j=0`, e `i` desde `
 | `0x10010380`    | `0x1001038`    | `0x0`                | Fallo (Forzoso)       |
 | `0x10010400`    | `0x1001040`    | `0x0`                | Fallo (**Capacidad**) |
 
-### Análisis clave de este nuevo escenario:
+### Análisis de este escenario:
 
 1.  **Etiquetas diferentes:** A diferencia del caso de mapeado directo donde gran parte de los bits se iban al índice, aquí vemos claramente cómo la etiqueta va cambiando en cada iteración porque la CPU tiene que guardar los 28 bits superiores completos para identificar el bloque.
 2.  **El noveno acceso (El fallo por capacidad):** Los primeros 8 accesos traen bloques nuevos a la caché, llenando exactamente las 8 líneas que tiene disponibles. Cuando llega el acceso número 9 (dirección `0x10010400`), la caché ya está llena. Como en las cachés totalmente asociativas no existen los fallos por conflicto, este noveno fallo se clasifica como un **Fallo por Capacidad**.
@@ -36,7 +42,7 @@ El cálculo se deduce directamente de las características de tu código y de la
 
 Por tanto, cada vez que el procesador recorre una fila completa de la matriz, necesita traer a la caché 8 bloques distintos desde la memoria principal.
 
-### Cabe la matriz completa en caché
+### ¿Cabe la matriz completa en caché?
 
 Cálculos detallados paso a paso:
 
@@ -65,3 +71,26 @@ Cálculos detallados paso a paso:
      La capacidad total de la memoria caché destinada a guardar los datos puros es de **128 Bytes**, mientras que la matriz completa ocupa **4096 Bytes**. Por lo tanto, la matriz es muchísimo más grande y **no cabe en la caché**.
 
 De hecho, los 128 Bytes de capacidad de la caché coinciden exactamente con el tamaño de **una sola fila de la matriz** (32 elementos por 4 bytes = 128 Bytes).
+
+## Apartado c
+
+**¿De qué tipo son los fallos que aparecen en la tabla?**
+En los primeros 9 accesos de la tabla se producen fallos **forzosos** (los 8 primeros, debido a que es la primera vez que se referencia a esos bloques) y un fallo **por capacidad** (el noveno acceso). Al tratarse de una caché totalmente asociativa, se eliminan por completo los fallos por conflicto.
+
+**¿Cabe la matriz en la caché?**
+**No**, tal y como calculamos anteriormente, la matriz completa ocupa 4096 bytes, mientras que tu caché solo tiene capacidad para albergar 128 bytes simultáneamente.
+
+**¿Qué tipo de fallos se producirán cuando comience el procesamiento de la segunda columna?**
+Se producirán **fallos por capacidad**. Aunque el elemento de la segunda columna (`A[i]`) físicamente pertenece al mismo bloque de 16 bytes que el de la primera (`A[i]`), al procesar la matriz por columnas tu código obliga a la CPU a cargar 32 bloques distintos para completar una sola columna. Al tener la caché un límite de 8 líneas, todos esos bloques iniciales habrán sido expulsados por la política LRU antes de poder reutilizarlos.
+
+**¿Cuál será la frecuencia de fallo?**
+La frecuencia de fallos será del **100%**. El pésimo patrón de acceso por columnas salta de fila en fila superando continuamente la capacidad de la caché, provocando que absolutamente cada lectura resulte en un fallo y deba ir a la memoria principal.
+
+**¿Cuál es el número total de accesos?**
+El código realiza un total de **1024 accesos** a la memoria caché (resultado del bucle anidado de 32 \* 32 iteraciones para leer o escribir en la matriz).
+
+A continuación tienes la tabla resumen con el comportamiento global de tu código, desglosando matemáticamente los 1024 fallos (256 forzosos, porque la matriz tiene 256 bloques en total y todos deben traerse por primera vez, y 768 por capacidad para el resto de iteraciones):
+
+| Tipo de fallo                        | Frec. Fallos | Número de accesos |
+| :----------------------------------- | :----------- | :---------------- |
+| Forzosos (256) y por Capacidad (768) | 100%         | 1024              |
