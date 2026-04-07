@@ -20,16 +20,16 @@ int main() {
 
     clock_t inicio = clock();
     
-    // -------INICIO DEL C  ÓDIGO QUE DEBE OPTIMIZARSE---------
-    // Calcula el m�ximo de cada columna de la matriz mat y los almacena en 
-    // el vector maximos.
-    for (j=0; j<M; j++) {
-        maximos[j] = mat[0][j];
-        for (i=1; i<N; i++) {
+    // -------INICIO DEL CÓDIGO QUE DEBE OPTIMIZARSE---------
+    // Calcula el máximo de cada columna de la matriz mat y los almacena en 
+    // el vector máximos.
+    for (i=0; i<N; i++) {
+        maximos[i] = mat[i][0];
+        for (j=1; j<M; j++) {
             if (mat[i][j] > max) 
-                maximos[j] = mat[i][j];
+                maximos[i] = mat[i][j];
         }
-        maximos[j] = max;
+        maximos[i] = max;
     }
     // -------FINAL DEL C�DIGO QUE DEBE OPTIMIZARSE---------
     
