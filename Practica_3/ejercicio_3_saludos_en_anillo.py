@@ -7,9 +7,9 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 # Cuantos procesos hay en mi comunicador
 size = comm.Get_size()
-# cual es el proceso siguiente en el anillo
+# cual es el proceso siguiente en el anillo?
 siguiente = (rank + 1) % size
-# cual es el proceso anterior en el anillo
+# cual es el proceso anterior en el anillo?
 anterior = (rank - 1) % size
 
 # cada proceso envía un mensaje a su siguiente y recibe un mensaje de su anterior

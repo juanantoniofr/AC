@@ -14,8 +14,8 @@ name = MPI.Get_processor_name()
 
 # Lanzamos más procesos que el número de procesadores disponibles
 num_procesadores = os.cpu_count()
-start_time = time.time()
+start_time = MPI.Wtime()
 # trabajo tonto
 s = sum(i*i for i in range(50_000_000))
-end_time = time.time()
+end_time = MPI.Wtime()
 print(f"Tiempo de ejecución del proceso {rank}: {end_time - start_time} segundos")

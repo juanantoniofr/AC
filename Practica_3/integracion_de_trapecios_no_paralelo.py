@@ -20,5 +20,5 @@ for i in range(1,n):
 integral *= h
 
 print (f"ESTIMACION USANDO n={n} TRAPECIOS")
-print (f"DE LA INTEGRAL DESDE {a} HASTA {b} = {integral}")
-print (f"ESTIMACION DE PI: {2*integral}")
+print (f"DE LA INTEGRAL DESDE {a} HASTA {b} = {integral:.2f}")
+print (f"ESTIMACION DE PI: {2*integral:.2f}")

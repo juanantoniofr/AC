@@ -6,10 +6,9 @@ def prod_escalar_serie (a, b, primer_elemento, n):
         suma += a[i] * b[i]
     return suma
 
-#elementos = 2*2*2*2*3*3*5*7*11*13
-#n = elementos
+elementos = 2*2*2*2*3*3*5*7*11*13
+n = elementos
 
-n = 6
 # Inicializa los vectores
 x = [i%5 for i in range(0,n)]
 y = [i%5 for i in range(0,n)]
@@ -22,9 +21,9 @@ p = comm.Get_size()
 #start_time = MPI.Wtime()
 # Cada proceso calcula una parte del producto escalar
 n_local = n // p # división entera del número de elementos entre el número de procesos
+
 inicio_vector_local = mi_rango * n_local
 suma_local = prod_escalar_serie (x, y, inicio_vector_local, n_local)
-print (f"MI RANGO = {mi_rango}, SUMA LOCAL = {suma_local}")
 
 # Enviamos el resultado local al proceso 0 para la suma global
 lista = comm.gather(suma_local, root=0)

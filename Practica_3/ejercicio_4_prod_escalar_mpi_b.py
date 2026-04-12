@@ -2,7 +2,6 @@ from mpi4py import MPI
 
 def prod_escalar_serie (a, b, primer_elemento, n):
     suma = 0.0
-    print(f"Proceso {MPI.COMM_WORLD.Get_rank()}: primer elemento = {primer_elemento} y último elemento = {primer_elemento+n}")
     for i in range(primer_elemento, primer_elemento+n):
         suma += a[i] * b[i]
     return suma
@@ -19,13 +18,13 @@ mi_rango = comm.Get_rank()
 p = comm.Get_size()
 
 comm.barrier() # sincroniza a los procesos antes de la suma global
-if mi_rango == 0:
-    start_time = MPI.Wtime()
+start_time = MPI.Wtime()
+
 # Cada proceso calcula una parte del producto escalar
 n_local = n // p # división entera del número de elementos entre el número de procesos
 inicio_vector_local = mi_rango * n_local
 suma_local = prod_escalar_serie (x, y, inicio_vector_local, n_local)
-print (f"MI RANGO = {mi_rango} , SUMA LOCAL = {suma_local}")
+
 
 
 if mi_rango == 0:
@@ -41,9 +40,8 @@ else:
     comm.send (suma_local, dest=0)
 
 comm.barrier() # sincroniza a los procesos después de la suma global
+end_time = MPI.Wtime()
 if mi_rango == 0:
-    end_time = MPI.Wtime()
     print (f"{mi_rango}: TIEMPO DE EJECUCIÓN {end_time - start_time}")
-    print(f"Tamaño del vector a {n} elementos y número de procesos {p}")
     print(f"-" * 20)
 
