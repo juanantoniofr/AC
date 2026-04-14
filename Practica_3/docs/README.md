@@ -18,12 +18,13 @@ MPI.Wtime()
 
 - `np.dot(A,B)`: Producto de matrices.
 - `np.array(x) @ np.array(y)`: Producto escalar de dos vectores.
-- import time: Para medir el tiempo de ejecución de un programa.
+- `import time`: Para medir el tiempo de ejecución de un programa.
 - `time.time()`: Devuelve el tiempo actual en segundos desde el epoch (1 de enero de 1970). Se puede usar para medir el tiempo de ejecución de un programa restando el tiempo inicial al tiempo final.
 
 ## estrutura de un programa MPI
 
-```pythonfrom mpi4py import MPI
+```python
+from mpi4py import MPI
 import numpy as np
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
