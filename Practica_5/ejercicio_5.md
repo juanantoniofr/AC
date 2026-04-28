@@ -258,7 +258,7 @@ FIN:
     ecall
 ```
 
-**Repetimos apartado `a` sin desvíos**
+**Repetimos apartado `a` sin desvíos pero con planificación**
 
 **primera iteración**
 
@@ -272,7 +272,7 @@ FIN:
 | `sb a2 , -1(a1)`       |     |     |        |        |      |     |        | IF   | **ID** | **ID** | _ID_ | EX  | MEM | WB  |         |
 | `j cont`               |     |     |        |        |      |     |        |      | IF     | IF     | IF   | ID  | EX  | MEM | WB      |
 | `li a7 , 10`           |     |     |        |        |      |     |        |      |        |        |      |     |     | IF  | _flush_ |
-| `cont:   lb a2, 0(a1)` |     |     |        |        |      |     |        |      |        |        |      |     |     | IF  | ID      |
+| `cont:   lb a2, 0(a1)` |     |     |        |        |      |     |        |      |        |        |      |     |     |     | IF      |
 
 **última iteración**
 
@@ -288,4 +288,58 @@ FIN:
 |                      |     |     |     |        |      |         |     |     |     |     |     |
 |                      |     |     |     |        |      |         |     |     |     |     |     |
 
+**- b ¿En cuántos ciclos se ejecuta este bucle?**
+
+**Instrucciones previas al bucle**
+
+- 1 ciclo
+  **Primera Iteración**
+- desde el ciclo 2 al 15 = 13 ciclos
+  **Iteraciones intermedias (17)**
+- 6 ciclos ideales
+- 4 Bloqueos:
+  - 3 bloqueos de datos (1 ciclo esperando a beqz + 2 ciclos esperando a sb)
+  - 1 bloqueo de control (el ciclo que se pierde al descartar la instrucción tras el salto incondicional j).
+- Total = (6 + 4 ) x 17 = 170
+  **Última iteración**
+- Desde el ciclo 1 al ciclo 11 = 10 ciclos
+
+**total**
+13 + 170 + 10 = 193 ciclos
+
 ## - d. Repita el apartado (c) suponiendo que el RISCV tiene todos los desvíos posibles.
+
+**primera iteración - Con desvíos y planificación**
+
+| CICLO                  | C1  | C2  | C3             | C4          | C5          | C6  | C7  | C8           | C9          | C10     | C11 | C12 |
+| ---------------------- | --- | --- | -------------- | ----------- | ----------- | --- | --- | ------------ | ----------- | ------- | --- | --- |
+| `la a1, cadena`        | IF  | ID  | _EX_ `out(a1)` | MEM         | WB          |     |     |              |             |         |     |     |
+| `cont: lb a2, 0(a1)`   |     | IF  | ID             | EX `in(a1)` | MEM         | WB  |     |              |             |         |     |     |
+| `addi a1, a1, 1`       |     |     | IF             | ID          | EX `in(a1)` | MEM | WB  |              |             |         |     |     |
+| `beqz a2, FIN`         |     |     |                |             | IF          | ID  | EX  | MEM          | WB          |         |     |     |
+| `addi a2, a2, 32`      |     |     |                |             |             | IF  | ID  | EX `out(a2)` | MEM         | WB      |     |     |
+| `sb a2 , -1(a1)`       |     |     |                |             |             |     | IF  | ID           | EX `in(a2)` | MEM     | WB  |     |
+| `j cont`               |     |     |                |             |             |     |     | IF           | ID          | EX      | MEM | WB  |
+| `li a7 , 10`           |     |     |                |             |             |     |     |              | IF          | _flush_ |     |     |
+| `cont:   lb a2, 0(a1)` |     |     |                |             |             |     |     |              |             | IF      | ID  |     |
+
+**última iteración - Con desvíos y planificación**
+
+| CICLO                | C1  | C2  | C3  | C4     | C5   | C6      | C7  | C8  | C9  | C10 | C11 |
+| -------------------- | --- | --- | --- | ------ | ---- | ------- | --- | --- | --- | --- | --- |
+| `cont: lb a2, 0(a1)` | IF  | ID  | EX  | MEM    | _WB_ |         |     |     |     |     |     |
+| `addi a1, a1, 1`     |     | IF  | ID  | EX     | MEM  | WB      |     |     |     |     |     |
+| `beqz a2, FIN`       |     |     | IF  | **ID** | _ID_ | EX      | MEM | WB  |     |     |     |
+| `addi a2, a2, 32`    |     |     |     | IF     | IF   | _flush_ |     |     |     |     |     |
+| `li a7 , 10`         |     |     |     |        |      | IF      | ID  | EX  | MEM | WB  |     |
+| `ecall`              |     |     |     |        |      |         | IF  | ID  | EX  | MEM | WB  |
+
+**- b ¿En cuántos ciclos se ejecuta este bucle?**
+
+**Instrucciones previas al bucle** - 1 ciclo
+**Primera Iteración** - desde el ciclo 2 al 10 = 8 ciclos
+**Iteraciones intermedias (17)** - 6 ciclos ideales - 0 Bloqueos - Total = 6 x 17 = 102
+**Última iteración** - Desde el ciclo 1 al ciclo 11 = 10 ciclos
+
+**total**
+1 + 8 + 102 + 10 = 121 ciclos
