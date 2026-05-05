@@ -29,11 +29,9 @@ Dibuje el diagrama de ejecución RISC-V **sin desvíos**.
 
 ---
 
-#### Esta es la tabla correcta y su explicación
+#### Cronograma sin desvios
 
-Para dibujar este diagrama "sin desvíos", debes aplicar rigurosamente las dependencias RAW introduciendo ciclos de bloqueo (stalls).
-
-| :-- | Ciclo                     | 1   | 2   | 3      | 4      | 5    | 6      | 7      | 8    | 9   | 10     | 11     | 12   | 13     | 14     | 15   | 16  | 17     | 18     | 19   | 20      |
+|     | Ciclo                     | 1   | 2   | 3      | 4      | 5    | 6      | 7      | 8    | 9   | 10     | 11     | 12   | 13     | 14     | 15   | 16  | 17     | 18     | 19   | 20      |
 | :-- | :------------------------ | :-- | :-- | :----- | :----- | :--- | :----- | :----- | :--- | :-- | :----- | :----- | :--- | :----- | :----- | :--- | :-- | :----- | :----- | :--- | :------ |
 | 1   | `auipc x11, 0xfff0`       | IF  | ID  | EX     | MEM    | _WB_ |        |        |      |     |        |        |      |        |        |      |     |        |        |      |         |
 | 2   | `addi x11, x11, 0`        |     | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |        |        |      |        |        |      |     |        |        |      |         |

@@ -27,17 +27,18 @@ FIN:
 
 **primera iteración**
 
-| CICLO                  | C1  | C2  | C3     | C4     | C5   | C6     | C7     | C8   | C9  | C10    | C11    | C12  | C13 | C14 | C15     | C16 | C17 |
-| ---------------------- | --- | --- | ------ | ------ | ---- | ------ | ------ | ---- | --- | ------ | ------ | ---- | --- | --- | ------- | --- | --- |
-| `la a1, cadena`        | IF  | ID  | EX     | MEM    | _WB_ |        |        |      |     |        |        |      |     |     |         |     |     |
-| `cont:   lb a2, 0(a1)` |     | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |        |        |      |     |     |         |     |     |
-| `beqz a2, FIN`         |     |     | IF     | IF     | _IF_ | **ID** | **ID** | _ID_ | EX  | MEM    | WB     |      |     |     |         |     |     |
-| `addi a2, a2, 32`      |     |     |        |        |      | IF     | IF     | _IF_ | ID  | EX     | MEM    | _WB_ |     |     |         |     |     |
-| `sb a2 , 0(a1)`        |     |     |        |        |      |        |        |      | IF  | **ID** | **ID** | _ID_ | EX  | MEM | WB      |     |     |
-| `addi a1, a1, 1`       |     |     |        |        |      |        |        |      |     | IF     | IF     | _IF_ | ID  | EX  | MEM     | WB  |     |
-| `j cont`               |     |     |        |        |      |        |        |      |     |        |        |      | IF  | ID  | EX      | MEM | WB  |
-| `li a7 , 10`           |     |     |        |        |      |        |        |      |     |        |        |      |     | IF  | _flush_ |     |     |
-| `cont:   lb a2, 0(a1)` |     |     |        |        |      |        |        |      |     |        |        |      |     |     | IF      | ID  | EX  |
+| CICLO                  | C1  | C2  | C3     | C4     | C5  | C6     | C7     | C8   | C9     | C10    | C11  | C12 | C13    | C14    | C15  | C16 | C17 | C18     | C19 | C20 |
+| ---------------------- | --- | --- | ------ | ------ | --- | ------ | ------ | ---- | ------ | ------ | ---- | --- | ------ | ------ | ---- | --- | --- | ------- | --- | --- |
+| `auipc a1, 0xfff0`     | IF  | ID  | EX     | MEM    | WB  |
+| `addi a1, a1, 0`       |     | IF  | **ID** | **ID** | ID  | EX     | MEM    | _WB_ |        |        |      |     |        |        |      |     |     |         |     |     |
+| `cont:   lb a2, 0(a1)` |     |     | IF     | IF     | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |        |        |      |     |     |         |     |     |
+| `beqz a2, FIN`         |     |     |        |        |     | IF     | IF     | _IF_ | **ID** | **ID** | _ID_ | EX  | MEM    | WB     |      |     |     |         |     |     |
+| `addi a2, a2, 32`      |     |     |        |        |     |        |        |      | IF     | IF     | _IF_ | ID  | EX     | MEM    | _WB_ |     |     |         |     |     |
+| `sb a2 , 0(a1)`        |     |     |        |        |     |        |        |      |        |        |      | IF  | **ID** | **ID** | _ID_ | EX  | MEM | WB      |     |     |
+| `addi a1, a1, 1`       |     |     |        |        |     |        |        |      |        |        |      |     | IF     | IF     | _IF_ | ID  | EX  | MEM     | WB  |     |
+| `j cont`               |     |     |        |        |     |        |        |      |        |        |      |     |        |        |      | IF  | ID  | EX      | MEM | WB  |
+| `li a7 , 10`           |     |     |        |        |     |        |        |      |        |        |      |     |        |        |      |     | IF  | _flush_ |     |     |
+| `cont:   lb a2, 0(a1)` |     |     |        |        |     |        |        |      |        |        |      |     |        |        |      |     |     | IF      | ID  | EX  |
 
 **última iteración**
 
