@@ -33,15 +33,18 @@ Dibuje el diagrama de ejecución RISC-V **sin desvíos**.
 
 Para dibujar este diagrama "sin desvíos", debes aplicar rigurosamente las dependencias RAW introduciendo ciclos de bloqueo (stalls).
 
-| Ciclo                     | 1   | 2   | 3      | 4      | 5    | 6      | 7      | 8    | 9   | 10     | 11     | 12   | 13      | 14  |
-| :------------------------ | :-- | :-- | :----- | :----- | :--- | :----- | :----- | :--- | :-- | :----- | :----- | :--- | :------ | :-- |
-| `lw a2, 0(a1)`            | IF  | ID  | EX     | MEM    | _WB_ |        |        |      |     |        |        |      |         |     |
-| `addi a2, a2, 5`          |     | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |        |        |      |         |     |
-| `sw a2, 0(a1)`            |     |     | **IF** | **IF** | _IF_ | **ID** | **ID** | _ID_ | EX  | MEM    |        |      |         |     |
-| `addi a1, a1, 4`          |     |     |        |        |      | **IF** | **IF** | _IF_ | ID  | EX     | MEM    | _WB_ |         |     |
-| `blt a1, a4, bucle`       |     |     |        |        |      |        |        |      | IF  | **ID** | **ID** | _ID_ | EX      | MEM |
-| `addi a7, x0, 10`         |     |     |        |        |      |        |        |      |     | **IF** | **IF** | _IF_ | _flush_ |     |
-| `lw a2, 0(a1)` (2ª iter.) |     |     |        |        |      |        |        |      |     |        |        |      | IF      | ID  |
+| :-- | Ciclo                     | 1   | 2   | 3      | 4      | 5    | 6      | 7      | 8    | 9   | 10     | 11     | 12   | 13     | 14     | 15   | 16  | 17     | 18     | 19   | 20      |
+| :-- | :------------------------ | :-- | :-- | :----- | :----- | :--- | :----- | :----- | :--- | :-- | :----- | :----- | :--- | :----- | :----- | :--- | :-- | :----- | :----- | :--- | :------ |
+| 1   | `auipc x11, 0xfff0`       | IF  | ID  | EX     | MEM    | _WB_ |        |        |      |     |        |        |      |        |        |      |     |        |        |      |         |
+| 2   | `addi x11, x11, 0`        |     | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |        |        |      |        |        |      |     |        |        |      |         |
+| 3   | `addi a4, x11, 400`       |     |     | IF     | IF     | IF   | **ID** | **ID** | _ID_ |     |        |        |      |        |        |      |     |        |        |      |         |
+| 4   | `lw a2, 0(a1)`            |     |     |        |        |      |        |        | IF   | ID  | EX     | MEM    | _WB_ |        |        |      |     |        |        |      |         |
+| 5   | `addi a2, a2, 5`          |     |     |        |        |      |        |        |      | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |        |        |      |         |
+| 6   | `sw a2, 0(a1)`            |     |     |        |        |      |        |        |      |     | **IF** | **IF** | _IF_ | **ID** | **ID** | _ID_ | EX  | MEM    |        |      |         |
+| 7   | `addi a1, a1, 4`          |     |     |        |        |      |        |        |      |     |        |        |      | **IF** | **IF** | _IF_ | ID  | EX     | MEM    | _WB_ |         |
+| 8   | `blt a1, a4, bucle`       |     |     |        |        |      |        |        |      |     |        |        |      |        |        |      | IF  | **ID** | **ID** | _ID_ | EX      |
+| 9   | `addi a7, x0, 10`         |     |     |        |        |      |        |        |      |     |        |        |      |        |        |      |     | **IF** | **IF** | _IF_ | _flush_ |
+| 10  | `lw a2, 0(a1)` (2ª iter.) |     |     |        |        |      |        |        |      |     |        |        |      |        |        |      |     |        |        |      | IF      |
 
 _Nota_: `li a7, 10` es una pseudoinstrucción, se traduce en RISC-V como `addi a7, x0, 10`
 
@@ -65,10 +68,10 @@ _Nota_: `li a7, 10` es una pseudoinstrucción, se traduce en RISC-V como `addi a
 | :------------------ | :-- | :-- | :----- | :----- | :--- | :----- | :----- | :--- | :-- | :----- | :----- | :--- | :-- | :-- | :-- | :-- | :-- |
 | `lw a2, 0(a1)`      | IF  | ID  | EX     | MEM    | _WB_ |        |        |      |     |        |        |      |     |     |     |     |     |
 | `addi a2, a2, 5`    |     | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |        |        |      |     |     |     |     |     |
-| `sw a2, 0(a1)`      |     |     | **IF** | **IF** | _IF_ | **ID** | **ID** | _ID_ | EX  | MEM    |        |      |     |     |     |     |     |
-| `addi a1, a1, 4`    |     |     |        |        |      | **IF** | **IF** | _IF_ | ID  | EX     | MEM    | _WB_ |     |     |     |     |     |
-| `blt a1, a4, bucle` |     |     |        |        |      |        |        |      | IF  | **ID** | **ID** | _ID_ | EX  | MEM |     |     |     |
-| `addi a7, x0, 10`   |     |     |        |        |      |        |        |      |     | **IF** | **IF** | _IF_ | ID  | EX  | MEM | WB  |     |
+| `sw a2, 0(a1)`      |     |     | IF     | IF     | IF   | **ID** | **ID** | _ID_ | EX  | MEM    | WB     |      |     |     |     |     |     |
+| `addi a1, a1, 4`    |     |     |        |        |      | IF     | IF     | IF   | ID  | EX     | MEM    | _WB_ |     |     |     |     |     |
+| `blt a1, a4, bucle` |     |     |        |        |      |        |        |      | IF  | **ID** | **ID** | _ID_ | EX  | MEM | WB  |     |     |
+| `addi a7, x0, 10`   |     |     |        |        |      |        |        |      |     | IF     | IF     | _IF_ | ID  | EX  | MEM | WB  |     |
 | `ecall`             |     |     |        |        |      |        |        |      |     |        |        |      | IF  | ID  | EX  | MEM | WB  |
 
 _Nota_: `li a7, 10` es una pseudoinstrucción, se traduce en RISC-V como `addi a7, x0, 10`
@@ -119,6 +122,23 @@ BPI = n bloqueos / n instrucciones ejecutadas
 
 Aplique la planificación de instrucciones para minimizar el número de bloqueos. ¿Cuántos bloqueos de datos pueden eliminarse en cada iteración?
 
+**código original**
+
+```asm
+la a1, x # x base address
+addi a4, a1, 400 # x address loop end
+
+bucle:
+    lw a2, 0(a1) # x[i]
+    addi a2, a2, 5 # x[i] + 5
+    sw a2, 0(a1) # store back
+    addi a1, a1, 4 # i++
+    blt a1, a4, bucle # loop i<100
+
+li a7 , 10 # Syscall exit
+ecall
+```
+
 #### Solución
 
 Para reducir los bloqueos sin desvíos, debes recordar **la regla de oro**: como las escrituras se hacen en la etapa WB y las lecturas en la etapa ID, **necesitas insertar al menos dos instrucciones independientes entre la instrucción que calcula un dato y la instrucción que lo necesita** para que el bloqueo se reduzca a 0 ciclos.
@@ -133,21 +153,32 @@ addi a4, a1, 200 # x address loop end
 
 bucle:
     lw a2, 0(a1)       # 1. Carga x[i]
-    lw a3, 4(a1)       # 2. Carga x[i+1]
 
-    addi a1, a1, 8     # 3. ADELANTAMOS el incremento del índice (i+=2)
+    addi a1, a1, 4     # 3. ADELANTAMOS el incremento del índice
 
     addi a2, a2, 5     # 4. Hay 2 instrucciones de separación con lw a2 -> ¡0 bloqueos!
-    addi a3, a3, 5     # 5. Hay 2 instrucciones de separación con lw a3 -> ¡0 bloqueos!
 
-    sw a2, -8(a1)      # 6. Guardamos x[i] (Offset compensado). 1 instr. de separación -> 1 bloqueo
-    sw a3, -4(a1)      # 7. Guardamos x[i+1]. El bloqueo anterior la retrasa justo a tiempo -> 0 bloqueos
+    sw a2, -4(a1)      # 6. Guardamos x[i] (Offset compensado). 0 instr. de separación -> 2 bloqueo
+
 
     blt a1, a4, bucle  # 8. Hay 4 instrucciones de separación con addi a1 -> ¡0 bloqueos de datos!
 
 li a7 , 10 # Syscall exit
 ecall
 ```
+
+| :-- | Ciclo                     | 1   | 2   | 3      | 4      | 5    | 6      | 7      | 8    | 9   | 10  | 11  | 12     | 13     | 14  | 15  | 16      | 17   | 18  |
+| :-- | :------------------------ | :-- | :-- | :----- | :----- | :--- | :----- | :----- | :--- | :-- | :-- | :-- | :----- | :----- | :-- | :-- | :------ | :--- | :-- |
+| 1   | `auipc a1, 0xfff0`        | IF  | ID  | EX     | MEM    | _WB_ |        |        |      |     |     |     |        |        |     |     |         |      |     |
+| 2   | `addi a1, a1, 0`          |     | IF  | **ID** | **ID** | _ID_ | EX     | MEM    | _WB_ |     |     |     |        |        |     |     |         |      |     |
+| 3   | `addi a4, a1, 400`        |     |     | IF     | IF     | IF   | **ID** | **ID** | _ID_ | EX  | MEM | WB  |        |        |     |     |         |      |     |
+| 4   | `lw a2, 0(a1)`            |     |     |        |        |      |        |        | IF   | ID  | EX  | MEM | _WB_   |        |     |     |         |      |     |
+| 5   | `addi a1, a1, 4`          |     |     |        |        |      |        |        |      | IF  | ID  | EX  | MEM    | _WB_   |     |     |         |      |     |
+| 6   | `addi a2, a2, 5`          |     |     |        |        |      |        |        |      |     | IF  | ID  | EX     | MEM    | WB  |     |         |      |     |
+| 7   | `sw a2, 0(a1)`            |     |     |        |        |      |        |        |      |     |     | IF  | **ID** | **ID** | ID  | EX  | MEM     | _WB_ |     |
+| 8   | `blt a1, a4, bucle`       |     |     |        |        |      |        |        |      |     |     |     |        |        | IF  | ID  | EX      | MEM  | WB  |
+| 9   | `addi a7, x0, 10`         |     |     |        |        |      |        |        |      |     |     |     |        |        |     | IF  | _flush_ |      |     |
+| 10  | `lw a2, 0(a1)` (2ª iter.) |     |     |        |        |      |        |        |      |     |     |     |        |        |     |     |         |      |     |
 
 ### ¿Por qué esta es la solución correcta?
 
