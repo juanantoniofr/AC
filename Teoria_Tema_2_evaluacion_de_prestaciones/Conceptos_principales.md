@@ -101,7 +101,7 @@ $$
 
 - No, la **ley de Amdahl** establece que el rendimiento máximo que se puede obtener al mejorar una parte de un sistema está limitado por la proporción de tiempo que esa parte representa en el sistema total. En otras palabras, si una parte del programa no se puede mejorar, el rendimiento total estará limitado por esa parte.
 
-- Factor de mejora máxima (n) que se puede obtener al mejorar una parte del sistema:
+- Factor de mejora máxima (a_s) que se puede obtener al mejorar una parte del sistema:
 
 $$
 a_{s} = \frac{R_{mejorado}}{R_{original}} = \frac{T_{original}}{T_{mejorado}} = \frac{1}{(1 - F) + \frac{F}{S}}
