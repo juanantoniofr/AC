@@ -161,7 +161,7 @@ Donde:
   f_{s}{^i} = a^{i} \cdot f
   $$
 
-  Donde **a^i** => Es el factor de actividad del transistor i, que representa **la probabilidad** de que el transistor i cambie de estado (de 0 a 1 o de 1 a 0) en un ciclo de reloj.
+  Donde **a<sup>i</sup>** => Es el factor de actividad del transistor i, que representa **la probabilidad** de que el transistor i cambie de estado (de 0 a 1 o de 1 a 0) en un ciclo de reloj.
 
 - Tenemos
   $$
