@@ -49,7 +49,7 @@ _Notas_:
 
 ### Esquema de direccionamiento en cache
 
-![alt text](esquema_direccionamiento_cache.png)
+![alt text](./img/esquema_direccionamiento_cache.png)
 
 ---
 
@@ -161,7 +161,7 @@ Los conceptos fundamentales involucrados en su funcionamiento son los siguientes
 - **Fallo de Página:** Es una excepción que se produce cuando la CPU intenta acceder a una página virtual que no se encuentra actualmente en la memoria principal (es decir, su bit de válido es 0) `, `. Ante este fallo, el Sistema Operativo debe tomar el control, ir a buscar la página requerida a la memoria secundaria (disco o SSD) y transferirla o copiarla a la memoria principal `, `.
 - **TLB (Translation Lookaside Buffer):** Es una pequeña memoria caché de alta velocidad (que se sitúa dentro del procesador) encargada de almacenar las traducciones más recientes de Número de Página Virtual a Número de Página Física `, `. Se accede a ella exclusivamente con el NPV para agilizar el proceso de traducción y evitar la penalización de tener que consultar la Tabla de Páginas en memoria principal `, `.
 
-![alt text](Sistema_de_memoria.png)
+![alt text](img/Sistema_de_memoria.png)
 
 #### Tipos de TLB: de mapeo directo, totalmente asociativa y asociativa por conjuntos de X vías.
 
