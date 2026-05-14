@@ -189,7 +189,7 @@ Este tamaño se calcula a partir de la capacidad total de la memoria principal f
 **4. Número de Página Física (NPF):**
 Siguiendo la misma lógica de tu deducción, si a la dirección física total le restamos el desplazamiento de la página (que, recuerda, es exactamente el mismo tanto en la memoria virtual como en la física), obtenemos el NPF: $31 - 12 =$ **19 bits**.
 
-![alt text](Sistema_de_memoria.png)
+![alt text](img/Sistema_de_memoria.png)
 
 ### Flujo completo de acceso a memoria
 
@@ -217,4 +217,4 @@ Una vez que el sistema ha conseguido el Número de Página Física (NPF), ya sea
 
 En resumen, existe una fuerte **dependencia secuencial**: la CPU emite la dirección virtual, la jerarquía de memoria virtual (TLB/Tabla de páginas) la traduce a dirección física, y finalmente esta dirección física "ataca" a la jerarquía de memoria caché para recuperar el dato a la máxima velocidad posible.
 
-![alt text](Flujo_completo_acceso_a_memoria.png)
+![alt text](img/Flujo_completo_acceso_a_memoria.png)
